@@ -93,23 +93,9 @@ public class Main {
             System.out.println();
 
 
-            String sqlQuery = "select s.fio ,s.sex , g.name ,c.fio  from student s\n" +
-                    "join grouptable g on s.id_group = g.id \n" +
-                    "join curator c on g.id_curator = c.id;";
-            System.out.println("Информация о всех студентах включая название группы и имя куратора:");
-            doThisSqlQuery(sqlQuery);
-
-            String sqlQuery2 = "select g.name, c.fio  from grouptable g\n" +
-                    "join curator c on g.id_curator = c.id;";
-            System.out.println("Cписок групп с их кураторами:");
-            doThisSqlQuery(sqlQuery2);
-
-
-
-            String sqlQuery3 = "select * from student s \n" +
-                    "where id_group = (select id from grouptable where name = 'JAVA для чайников')";
-            System.out.println("Студенты из одной группы:");
-            doThisSqlQuery(sqlQuery3);
+            studentTable.selectStudentWithGroupAndCurator();
+            groupeTable.selectGroupAndCurator();
+            studentTable.selectStudentFromGroup();
 
     }
 
@@ -118,20 +104,5 @@ public class Main {
         }
     }
 
-    public static void doThisSqlQuery(String sqlRequest) {
-        MySQLConnector db = new MySQLConnector();
-        ResultSet rs = db.executeRequestWithAnswer(sqlRequest);
-        try {
-            int columns = rs.getMetaData().getColumnCount();
-            while (rs.next()) {
-                for (int i = 1; i <= columns; i++) {
-                    System.out.print(rs.getString(i)+ "\t");
-                }
-                System.out.println();
-            }
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-        }
-        System.out.println();
-    }
+
 }

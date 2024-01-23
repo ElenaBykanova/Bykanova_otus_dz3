@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 public abstract class AbsTable {
     protected String tableName;
     protected Map<String, String> columns;
-    IDBConnector db;
+    protected IDBConnector db;
 
 
     public AbsTable(String tableName) {
@@ -30,6 +30,23 @@ public abstract class AbsTable {
                 .map((Map.Entry entry) -> String.format("%s %s", entry.getKey(), entry.getValue()))
                 .collect(Collectors.joining(", "));
         return result;
+    }
+
+    protected void doThisSqlQuery(String sqlRequest) {
+        MySQLConnector db = new MySQLConnector();
+        ResultSet rs = db.executeRequestWithAnswer(sqlRequest);
+        try {
+            int columns = rs.getMetaData().getColumnCount();
+            while (rs.next()) {
+                for (int i = 1; i <= columns; i++) {
+                    System.out.print(rs.getString(i)+ "\t");
+                }
+                System.out.println();
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        System.out.println();
     }
 
 }

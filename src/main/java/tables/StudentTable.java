@@ -72,9 +72,9 @@ public class StudentTable extends AbsTable {
         return count;
     }
 
-    public ArrayList<Student> selectStudentBySex (String sex){
+    public ArrayList<Student> selectStudentBySex (String sex) {
         db = new MySQLConnector();
-        ArrayList<Student> students= new ArrayList<>();
+        ArrayList<Student> students = new ArrayList<>();
         String sqlQuery = String.format("SELECT * from %s where sex = '%s'",
                 tableName, sex);
         db.executeRequest(sqlQuery);
@@ -95,5 +95,22 @@ public class StudentTable extends AbsTable {
 
         return students;
     }
+
+    public void selectStudentWithGroupAndCurator() {
+            String sqlQuery = "select s.fio ,s.sex , g.name ,c.fio  from student s\n" +
+                  "join grouptable g on s.id_group = g.id \n" +
+                   "join curator c on g.id_curator = c.id;";
+            System.out.println("Cписок студентов, их групп и кураторов:");
+            doThisSqlQuery(sqlQuery);
+        }
+
+    public void selectStudentFromGroup() {
+        String sqlQuery = "select * from student s \n" +
+                "where id_group = (select id from grouptable where name = 'JAVA для чайников')";
+        System.out.println("Выборка студентов из одной группы:");
+        doThisSqlQuery(sqlQuery);
+    }
+
+
 
 }
